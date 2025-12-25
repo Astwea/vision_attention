@@ -1,0 +1,107 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyTorch
+*.pth
+*.pt
+*.ckpt
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environment
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.conda/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# 数据集文件 - 不提交数据集
+data/
+!data/.gitkeep
+
+# 模型检查点 - 不提交训练好的模型（文件太大）
+checkpoints/
+!checkpoints/.gitkeep
+
+# 训练结果和日志
+results/
+*.log
+
+# 可视化结果
+visualizations/
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.pdf
+!README.md
+!docs/*.png
+!docs/*.jpg
+
+# 消融实验结果
+ablation_results/
+
+# TensorBoard日志
+logs/
+*.tfevents.*
+
+# 临时文件
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# 数据集压缩包
+*.tar
+*.tar.gz
+*.zip
+*.tgz
+
+# 系统文件
+Thumbs.db
+.DS_Store
+
+# 特定数据集目录
+data/cifar-10-batches-py/
+data/cifar-10-python.tar.gz
+data/coco/
+data/imagenet/
+data/voc/
+data/VOC*/
+
+# 实验输出
+experiments/output/
+experiments/logs/
+
