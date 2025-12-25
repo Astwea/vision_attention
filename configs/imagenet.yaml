@@ -1,0 +1,85 @@
+# ImageNet classification configuration
+
+task_type: "classification"
+
+# Dataset configuration
+dataset:
+  name: "imagenet"
+  root: "./data/imagenet"
+  input_size: 224
+  patch_grid_size: 7  # 7x7 = 49 patches
+  num_workers: 8
+  download: false  # ImageNet requires manual download
+  num_classes: 1000
+
+# Model configuration
+model:
+  name: "attention_routing"
+  
+  backbone:
+    in_channels: 3
+    out_channels: 64
+    num_layers: 2
+    
+  attention:
+    hidden_dim: 32
+    num_layers: 1
+    
+  router:
+    mode: "learnable_threshold"
+    threshold_init: 0.5
+    temperature: 1.0
+    
+  mlp_big:
+    input_dim: 9408  # 3 * (224/7)^2 = 3 * 32^2 = 3072, but adjusted for actual patch size
+    hidden_dim: 512
+    output_dim: 128
+    num_layers: 3
+    
+  mlp_small:
+    input_dim: 9408
+    hidden_dim: 64
+    output_dim: 128
+    num_layers: 1
+    
+  aggregator:
+    mode: "concat"
+    output_dim: 256
+    
+  task_head:
+    num_classes: 1000
+    hidden_dim: 256
+
+# Training configuration
+training:
+  batch_size: 64
+  num_epochs: 100
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  optimizer: "adam"
+  scheduler: "cosine"
+  warmup_epochs: 5
+  
+  loss:
+    alpha: 0.01
+    
+  log_interval: 100
+  save_interval: 10
+  eval_interval: 1
+  
+  checkpoint_dir: "./checkpoints"
+  save_best: true
+  
+  visualize_interval: 50
+  vis_dir: "./visualizations"
+
+# Evaluation configuration
+evaluation:
+  batch_size: 64
+  visualize: true
+  save_attention_maps: true
+
+# Device
+device: "cuda"
+seed: 42
+

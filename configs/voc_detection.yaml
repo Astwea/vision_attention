@@ -1,0 +1,89 @@
+# Pascal VOC object detection configuration
+
+task_type: "detection"
+
+# Dataset configuration
+dataset:
+  name: "voc"
+  root: "./data/voc"
+  year: "2012"
+  input_size: 512
+  patch_grid_size: 16
+  num_workers: 4
+  num_classes: 20
+
+# Model configuration
+model:
+  name: "attention_routing"
+  
+  backbone:
+    in_channels: 3
+    out_channels: 64
+    num_layers: 2
+    
+  attention:
+    hidden_dim: 32
+    num_layers: 1
+    
+  router:
+    mode: "learnable_threshold"
+    threshold_init: 0.5
+    temperature: 1.0
+    
+  mlp_big:
+    input_dim: 3072
+    hidden_dim: 512
+    output_dim: 128
+    num_layers: 3
+    
+  mlp_small:
+    input_dim: 3072
+    hidden_dim: 64
+    output_dim: 128
+    num_layers: 1
+    
+  aggregator:
+    mode: "concat"
+    output_dim: 256
+    
+  detection_head:
+    hidden_dim: 256
+    num_anchors: 1
+
+# Training configuration
+training:
+  batch_size: 8
+  num_epochs: 50
+  learning_rate: 0.0001
+  weight_decay: 0.0001
+  optimizer: "adam"
+  scheduler: "cosine"
+  warmup_epochs: 2
+  
+  loss:
+    alpha: 0.25
+    gamma: 2.0
+    reg_weight: 1.0
+    cls_weight: 1.0
+    use_focal: true
+    
+  log_interval: 50
+  save_interval: 5
+  eval_interval: 1
+  
+  checkpoint_dir: "./checkpoints"
+  save_best: true
+  
+  visualize_interval: 100
+  vis_dir: "./visualizations"
+
+# Evaluation configuration
+evaluation:
+  batch_size: 8
+  visualize: true
+  save_attention_maps: true
+
+# Device
+device: "cuda"
+seed: 42
+
