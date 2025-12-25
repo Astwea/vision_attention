@@ -3,10 +3,26 @@
 from typing import Tuple, Optional, Dict
 from torch.utils.data import DataLoader
 
-from .cifar import get_cifar_dataloaders
-from .imagenet import get_imagenet_dataloaders
-from .coco import get_coco_dataloaders
-from .voc import get_voc_dataloaders
+# Optional imports - only import modules that exist
+try:
+    from .cifar import get_cifar_dataloaders
+except ImportError:
+    get_cifar_dataloaders = None
+
+try:
+    from .imagenet import get_imagenet_dataloaders
+except ImportError:
+    get_imagenet_dataloaders = None
+
+try:
+    from .coco import get_coco_dataloaders
+except ImportError:
+    get_coco_dataloaders = None
+
+try:
+    from .voc import get_voc_dataloaders
+except ImportError:
+    get_voc_dataloaders = None
 
 
 def get_dataloaders(
@@ -56,6 +72,8 @@ def get_dataloaders(
         raise ValueError(f"Unknown task_type: {task_type}")
     
     if dataset_name in ["cifar10", "cifar100"]:
+        if get_cifar_dataloaders is None:
+            raise ImportError("CIFAR dataset module not available")
         if task_type != "classification":
             raise ValueError(f"Dataset {dataset_name} only supports classification task")
         
@@ -71,6 +89,8 @@ def get_dataloaders(
         return train_loader, val_loader, test_loader
     
     elif dataset_name == "imagenet":
+        if get_imagenet_dataloaders is None:
+            raise ImportError("ImageNet dataset module not available")
         if task_type != "classification":
             raise ValueError(f"Dataset {dataset_name} only supports classification task")
         
@@ -85,6 +105,8 @@ def get_dataloaders(
         return train_loader, val_loader, None
     
     elif dataset_name == "coco":
+        if get_coco_dataloaders is None:
+            raise ImportError("COCO dataset module not available")
         train_loader, val_loader = get_coco_dataloaders(
             root=kwargs.get('dataset_root', root),
             ann_file_train=kwargs.get('ann_file_train', "annotations/instances_train2017.json"),
@@ -98,6 +120,8 @@ def get_dataloaders(
         return train_loader, val_loader, None
     
     elif dataset_name == "voc" or dataset_name == "pascal_voc":
+        if get_voc_dataloaders is None:
+            raise ImportError("VOC dataset module not available")
         train_loader, val_loader = get_voc_dataloaders(
             root=kwargs.get('dataset_root', root),
             year=kwargs.get('year', "2012"),

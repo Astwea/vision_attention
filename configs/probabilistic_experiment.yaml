@@ -1,0 +1,64 @@
+# Configuration for probabilistic attention routing experiments
+
+# Model configuration
+model_name: "probabilistic"  # Options: probabilistic, baseline_large, baseline_small, deterministic
+router_mode: "gumbel_softmax"  # Options: gumbel_softmax, straight_through
+temperature: 1.0  # Temperature for Gumbel-Softmax or Straight-Through
+threshold: 0.5  # Threshold for Straight-Through router
+
+# Dataset configuration
+data_root: "./data"
+image_size: 64
+digit_size: 14
+num_clutter_digits: 4
+noise_intensity: 0.3
+patch_grid_size: 8  # 8x8 = 64 patches
+
+# Model architecture
+backbone:
+  in_channels: 3
+  out_channels: 64
+  num_layers: 2
+
+attention:
+  hidden_dim: 32
+  num_layers: 1
+
+mlp_big:
+  hidden_dim: 512
+  output_dim: 128
+  num_layers: 3
+
+mlp_small:
+  hidden_dim: 64
+  output_dim: 128
+  num_layers: 1
+
+aggregator:
+  mode: "concat"  # Options: concat, mean, weighted_mean
+  output_dim: 256
+
+task_head:
+  hidden_dim: 128
+  dropout: 0.1
+
+# Training configuration
+batch_size: 64
+learning_rate: 0.001
+num_epochs: 100
+weight_decay: 0.0001
+optimizer: "adam"  # Options: adam, sgd
+scheduler: "cosine"  # Options: cosine, step
+
+# Evaluation configuration
+inference_modes: ["expectation", "top_p", "hard_threshold"]  # Modes to evaluate
+
+# Paths
+checkpoint_dir: "./checkpoints/probabilistic"
+vis_dir: "./visualizations/probabilistic"
+
+# Other
+seed: 42
+device: "cuda"  # Options: cuda, cpu
+num_workers: 0  # Set to 0 to avoid "Too many open files" error. Use >0 only if system allows
+
